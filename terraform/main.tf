@@ -4,6 +4,13 @@ provider "aws" {
   region     = "us-east-1"
 }
 
+resource "aws_s3_bucket" "buckets_s3" {
+  bucket = "bucketswnationaltest"
+  tags = {
+    Name = "bucketswnationaltest"
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "buckets_s3" {
   bucket = aws_s3_bucket.buckets_s3.id
 

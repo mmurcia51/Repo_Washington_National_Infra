@@ -68,7 +68,7 @@ resource "aws_ecs_service" "washington_ecs_srv" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.washington-nat_target_group.arn
+    target_group_arn = aws_alb_target_group.washington_target_group.arn
     container_name   = "appangular"
     container_port   = 83
   }

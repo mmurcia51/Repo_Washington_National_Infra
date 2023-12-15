@@ -1,47 +1,47 @@
 # Creación de la VPC
-resource "aws_vpc" "washington-nat_vpc" {
+resource "aws_vpc" "washington_vpc" {
   cidr_block           = "10.0.0.0/22" # Rango de direcciones IP para la VPC
   enable_dns_support   = true          # Habilitar soporte DNS en la VPC
   enable_dns_hostnames = true          # Habilitar nombres de host DNS en la VPC
 
   tags = {
-    Name       = "washington-nat-vpc" # Etiqueta para identificar la VPC
+    Name       = "washington-vpc" # Etiqueta para identificar la VPC
     Enviroment = "Produccion"
   }
 }
 
 # Creación de la Subnet 1
 resource "aws_subnet" "subnet1" {
-  vpc_id                  = aws_vpc.washington-nat_vpc.id
+  vpc_id                  = aws_vpc.washington_vpc.id
   cidr_block              = "10.0.1.0/24" # Rango de direcciones IP para la Subnet 1
   availability_zone       = "us-east-1a"  # Zona de disponibilidad de AWS
   map_public_ip_on_launch = true          # Asignar IP pública a instancias lanzadas en la Subnet
 
   tags = {
-    Name       = "washington-nat-subnet-1" # Etiqueta para identificar la Subnet 1
+    Name       = "washington-subnet-1" # Etiqueta para identificar la Subnet 1
     Enviroment = "Produccion"
   }
 }
 
 # Creación de la Subnet 2
 resource "aws_subnet" "subnet2" {
-  vpc_id                  = aws_vpc.washington-nat_vpc.id
+  vpc_id                  = aws_vpc.washington_vpc.id
   cidr_block              = "10.0.2.0/24" # Rango de direcciones IP para la Subnet 2
   availability_zone       = "us-east-1b"  # Zona de disponibilidad de AWS
   map_public_ip_on_launch = true          # Asignar IP pública a instancias lanzadas en la Subnet
 
   tags = {
-    Name       = "washington-nat-subnet-2" # Etiqueta para identificar la Subnet 2
+    Name       = "washington-subnet-2" # Etiqueta para identificar la Subnet 2
     Enviroment = "Produccion"
   }
 }
 
 # Creación de la Tabla de Ruteo para la Subnet 1
 resource "aws_route_table" "route_table_subnet1" {
-  vpc_id = aws_vpc.washington-nat_vpc.id
+  vpc_id = aws_vpc.washington_vpc.id
 
   tags = {
-    Name       = "washington-nat-route-table-subnet-1" # Etiqueta para identificar la tabla de ruteo
+    Name       = "washington-route-table-subnet-1" # Etiqueta para identificar la tabla de ruteo
     Enviroment = "Produccion"
   }
 }
@@ -54,10 +54,10 @@ resource "aws_route_table_association" "association_subnet1" {
 
 # Creación de la Tabla de Ruteo para la Subnet 2
 resource "aws_route_table" "route_table_subnet2" {
-  vpc_id = aws_vpc.washington-nat_vpc.id
+  vpc_id = aws_vpc.washington_vpc.id
 
   tags = {
-    Name       = "washington-nat-route-table-subnet-2" # Etiqueta para identificar la tabla de ruteo
+    Name       = "washington-route-table-subnet-2" # Etiqueta para identificar la tabla de ruteo
     Enviroment = "Produccion"
   }
 }
@@ -69,10 +69,10 @@ resource "aws_route_table_association" "association_subnet2" {
 }
 
 # Crear Internet Gateway
-resource "aws_internet_gateway" "washington-nat_igw" {
-  vpc_id = aws_vpc.washington-nat_vpc.id # Asociar el Internet Gateway con la VPC creada anteriormente
+resource "aws_internet_gateway" "washington_igw" {
+  vpc_id = aws_vpc.washington_vpc.id # Asociar el Internet Gateway con la VPC creada anteriormente
 
   tags = {
-    Name = "washington-nat-igw" # Etiqueta para identificar el Internet Gateway
+    Name = "washington-igw" # Etiqueta para identificar el Internet Gateway
   }
 }

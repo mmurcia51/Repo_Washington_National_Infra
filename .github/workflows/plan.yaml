@@ -28,6 +28,7 @@ jobs:
         run: cd terraform
 
       - name: terraform init
+        working-directory: ./terraform
         id: init
         run: |
             terraform init \
@@ -37,12 +38,15 @@ jobs:
               -backend-config="region=us-east-1" \
               -backend-config="encrypt=true"
       - name: terraform fmt
+        working-directory: ./terraform
         id: fmt
         run: terraform fmt
       - name: terraform validate
+        working-directory: ./terraform
         id: validate
         run: terraform validate
       - name: terraform plan
+        working-directory: ./terraform
         id: plan
         run: terraform plan
 

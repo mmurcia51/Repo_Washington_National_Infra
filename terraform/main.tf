@@ -4,6 +4,7 @@ provider "aws" {
   region     = "us-east-1"
 }
 
+/*
 resource "aws_s3_bucket" "buckets_s3" {
   bucket = "bucketswnationaltest"
   tags = {
@@ -29,3 +30,4 @@ resource "aws_s3_bucket_acl" "buckets_s3" {
   bucket = aws_s3_bucket.buckets_s3.id
   acl    = "public-read"
 }
+*/

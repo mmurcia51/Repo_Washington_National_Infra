@@ -14,10 +14,11 @@ resource "aws_alb" "washington-nat_alb" {
 
 # Creación del Grupo de Destino del ALB
 resource "aws_alb_target_group" "washington-nat_target_group" {
-  name     = "washington-nat-target-group" # Nombre del grupo de destino
-  port     = 80                            # Puerto al que el ALB enviará el tráfico
-  protocol = "HTTP"                        # Protocolo utilizado
-  vpc_id   = aws_vpc.washington-nat_vpc.id # ID de la VPC
+  name        = "washington-nat-target-group" # Nombre del grupo de destino
+  port        = 80                            # Puerto al que el ALB enviará el tráfico
+  protocol    = "TCP"                         # Protocolo utilizado 
+  vpc_id      = aws_vpc.washington-nat_vpc.id # ID de la VPC
+  target_type = "ip"
 
   health_check {
     path                = "/" # Ruta de la comprobación de salud

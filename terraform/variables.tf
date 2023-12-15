@@ -16,12 +16,12 @@ variable "access_key" {
 }
 
 # Definición variables
-
+/*
 variable "buckets_s3" {
-  description = "buckets S3" 
-  type = string  
+  description = "buckets S3"
+  type        = string
 }
-
+*/
 variable "secret_key" {
   description = "secret_key"
   type        = string

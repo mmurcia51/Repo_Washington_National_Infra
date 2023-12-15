@@ -8,7 +8,7 @@ variable "ecs_execution_role_name" {
   default     = "washington-nat-ecs-execution-role"
 }
 
-variable "access_key" {
+/*variable "access_key" {
   description = "access_key"
   type        = string
   sensitive   = true
@@ -31,4 +31,4 @@ variable "secret_key" {
 
   default     = ${{ secrets.AWS_SECRET_ACCESS_KEY 
 
-}
+}*/

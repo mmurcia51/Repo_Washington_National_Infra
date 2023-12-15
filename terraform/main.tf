@@ -1,33 +1,88 @@
 provider "aws" {
-  access_key = "AKIA6CY4IDLETEVNMFW4"
-  secret_key = "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"
-  region     = "us-east-1"
+  region = "us-west-2"
 }
 
-/*
-resource "aws_s3_bucket" "buckets_s3" {
-  bucket = "bucketswnationaltest"
-  tags = {
-    Name = "bucketswnationaltest"
-  }
+resource "aws_s3_bucket" "b" {
+  bucket = "washintong-prueba"
+  #acl    = "public-read"
 }
 
-resource "aws_s3_bucket_public_access_block" "buckets_s3" {
-  bucket = aws_s3_bucket.buckets_s3.id
+resource "aws_s3_bucket_public_access_block" "b_access" {
+  bucket = aws_s3_bucket.b.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
+  block_public_acls   = false
+  block_public_policy = false
+  ignore_public_acls  = false
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_acl" "buckets_s3" {
-  depends_on = [
-    aws_s3_bucket_ownership_controls.buckets_s3,
-    aws_s3_bucket_public_access_block.buckets_s3,
-  ]
+resource "aws_s3_bucket_policy" "b_policy" {
+  bucket = aws_s3_bucket.b.id
 
-  bucket = aws_s3_bucket.buckets_s3.id
-  acl    = "public-read"
+  policy = <<POLICY
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Sid":"PublicReadGetObject",
+      "Effect":"Allow",
+      "Principal": "*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::washintong-prueba/*"]
+    }
+  ]
 }
-*/
+POLICY
+}
+
+
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "OAI for S3 bucket"
+}
+
+resource "aws_cloudfront_distribution" "s3_distribution" {
+  origin {
+    domain_name = aws_s3_bucket.b.bucket_regional_domain_name
+    origin_id   = "S3Origin"
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+    }
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  comment             = "S3 bucket distribution"
+  default_root_object = "index.html"
+
+  default_cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "S3Origin"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "allow-all"
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
+  }
+
+  price_class = "PriceClass_100"
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+}

@@ -12,7 +12,9 @@ variable "access_key" {
   description = "access_key"
   type        = string
   sensitive   = true
-  default     = "AKIA6CY4IDLETEVNMFW4"
+
+  default     = ${{ secrets.AWS_ACCESS_KEY_ID }}
+
 }
 
 # Definición variables
@@ -26,5 +28,7 @@ variable "secret_key" {
   description = "secret_key"
   type        = string
   sensitive   = true
-  default     = "tPIkyqbuSpak88k2Gq6eVg0pLcOjqMuPH8e33fvH"
+
+  default     = ${{ secrets.AWS_SECRET_ACCESS_KEY 
+
 }

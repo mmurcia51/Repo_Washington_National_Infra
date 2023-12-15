@@ -33,7 +33,7 @@ jobs:
         run: |
             terraform init \
               -input=false \
-              -backend-config="bucket=bkc-washinthong" \
+              -backend-config="bucket=bck-washington" \
               -backend-config="key=washinthong.tfstate" \
               -backend-config="region=us-east-1" \
               -backend-config="encrypt=true"

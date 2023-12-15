@@ -24,8 +24,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
 
-      - name: Terraform Init
-        run: terraform init
+      - name: terraform init
+        id: init
+        run: |
+              terraform init \
+                -input=false \
+                -backend-config="bucket=terraformwashintong" \
+                -backend-config="key=washinthong.tfstate" \
+                -backend-config="region=us-east-1" \
+                -backend-config="encrypt=true"
 
       - name: Terraform Validate
         run: terraform validate

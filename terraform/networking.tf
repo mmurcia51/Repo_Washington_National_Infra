@@ -76,3 +76,18 @@ resource "aws_internet_gateway" "washington_igw" {
     Name = "washington-igw" # Etiqueta para identificar el Internet Gateway
   }
 }
+
+
+# Agregar regla para apuntar al Internet Gateway
+resource "aws_route" "ruta_al_igw1" {
+  route_table_id         = aws_route_table.route_table_subnet1.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.washington_igw.id
+}
+
+# Agregar regla para apuntar al Internet Gateway
+resource "aws_route" "ruta_al_igw2" {
+  route_table_id         = aws_route_table.route_table_subnet2.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.washington_igw.id
+}

@@ -1,6 +1,6 @@
 # Creación de un Application Load Balancer (ALB)
 resource "aws_alb" "washington_alb" {
-  name               = "washington-alb"                           # Nombre del ALB
+  name               = "washington-alb"                               # Nombre del ALB
   internal           = false                                          # No es interno
   load_balancer_type = "network"                                      # Tipo de balanceador de carga de aplicación
   subnets            = [aws_subnet.subnet1.id, aws_subnet.subnet2.id] # Subnets en las que se desplegará el ALB
@@ -15,9 +15,9 @@ resource "aws_alb" "washington_alb" {
 # Creación del Grupo de Destino del ALB
 resource "aws_alb_target_group" "washington_target_group" {
   name        = "washingtonnattargetgroup" # Nombre del grupo de destino
-  port        = 80                            # Puerto al que el ALB enviará el tráfico
-  protocol    = "TCP"                         # Protocolo utilizado 
-  vpc_id      = aws_vpc.washington_vpc.id # ID de la VPC
+  port        = 80                         # Puerto al que el ALB enviará el tráfico
+  protocol    = "TCP"                      # Protocolo utilizado 
+  vpc_id      = aws_vpc.washington_vpc.id  # ID de la VPC
   target_type = "ip"
 
   health_check {
@@ -79,4 +79,24 @@ resource "aws_security_group_rule" "allow_ingress_subnet2" {
   to_port           = 8080                                     # Puerto de destino
   protocol          = "-1"                                     # Protocolo (-1 significa todos los protocolos)
   cidr_blocks       = [aws_subnet.subnet2.cidr_block]          # Bloque CIDR de la Sub
+}
+
+# Regla de Ingreso HTTP para el Grupo de Seguridad
+resource "aws_security_group_rule" "allow_ingress_http" {
+  security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad
+  type              = "ingress"                                # Tipo de regla de seguridad (entrada)
+  from_port         = 80                                       # Puerto de inicio (HTTP)
+  to_port           = 83                                       # Puerto de destino (HTTP)
+  protocol          = "tcp"                                    # Protocolo (TCP)
+  cidr_blocks       = ["0.0.0.0/0"]                            # Rango de IP permitido (puedes ajustarlo según tus necesidades)
+}
+
+# Regla de Ingreso para todo el tráfico desde otro Grupo de Seguridad
+resource "aws_security_group_rule" "allow_ingress_all_traffic" {
+  security_group_id        = aws_security_group.nat_security_group.id # ID del grupo de seguridad destino
+  type                     = "ingress"                                # Tipo de regla de seguridad (entrada)
+  from_port                = 0                                        # Puerto de inicio (puedes ajustarlo según tus necesidades)
+  to_port                  = 0                                        # Puerto de destino (puedes ajustarlo según tus necesidades)
+  protocol                 = "-1"                                     # Protocolo (-1 significa todos los protocolos)
+  source_security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad de origen
 }

@@ -3,10 +3,11 @@ resource "aws_ecs_cluster" "washington_ecs" {
   name = "washington-ecs"
 }
 
-#resource "aws_ecs_cluster_capacity_provider" "washington_nat_ecs_cluster" {
+/*
+resource "aws_ecs_cluster_capacity_provider" "washington_nat_ecs_cluster" {
  # name = "FARGATE"  
-  #capacity_provider_name = "FARGATE"
-#}
+  capacity_provider_name = "FARGATE"
+}
 
 #Asociamos el cluster - capacity 
 resource "aws_ecs_cluster_capacity_providers" "washington_nat_ecs_cluster" {
@@ -20,18 +21,14 @@ resource "aws_ecs_cluster_capacity_providers" "washington_nat_ecs_cluster" {
     capacity_provider = aws_ecs_capacity_provider.washington_nat_ecs_cluster.name
   }
 }
-
-#Creacion Task Definition
+*/
 resource "aws_ecs_task_definition" "washington_tsk" {
   family                   = "washington_family"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   cpu                      = 256
-  runtime_platform {
-    operating_system_family = "LINUX"
-    cpu_architecture        = "X86_64"
-  }
+  memory                   = 512
+
   container_definitions = jsonencode([
     {
       name      = "appangular"
@@ -48,23 +45,27 @@ resource "aws_ecs_task_definition" "washington_tsk" {
       ]
     }
   ])
+
 }
+
+
+
 
 
 # Creacion Servicio
 resource "aws_ecs_service" "washington_ecs_srv" {
   name            = "washington-ecs-srv"
-  cluster         = aws_ecs_cluster.washington-ecs
+  cluster         = aws_ecs_cluster.washington_ecs.id
   task_definition = aws_ecs_task_definition.washington_tsk.arn
   desired_count   = 1
-
+  launch_type     = "FARGATE"
   network_configuration {
     subnets         = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
     security_groups = [aws_security_group.nat_security_group.id]
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.washington-nat_target_group.arn
+    target_group_arn = aws_alb_target_group.washington_target_group.arn
     container_name   = "appangular"
     container_port   = 83
   }

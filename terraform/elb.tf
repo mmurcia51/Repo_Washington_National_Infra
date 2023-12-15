@@ -86,7 +86,7 @@ resource "aws_security_group_rule" "allow_ingress_http" {
   security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad
   type              = "ingress"                                # Tipo de regla de seguridad (entrada)
   from_port         = 80                                       # Puerto de inicio (HTTP)
-  to_port           = 83                                       # Puerto de destino (HTTP)
+  to_port           = 80                                       # Puerto de destino (HTTP)
   protocol          = "tcp"                                    # Protocolo (TCP)
   cidr_blocks       = ["0.0.0.0/0"]                            # Rango de IP permitido (puedes ajustarlo según tus necesidades)
 }
@@ -100,3 +100,24 @@ resource "aws_security_group_rule" "allow_ingress_all_traffic" {
   protocol                 = "-1"                                     # Protocolo (-1 significa todos los protocolos)
   source_security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad de origen
 }
+
+
+# # Regla de Ingreso para todo el tráfico desde otro Grupo de Seguridad
+# resource "aws_security_group_rule" "allow_ingress_all_traffic1" {
+#   security_group_id        = aws_security_group.default.id            # ID del grupo de seguridad destino
+#   type                     = "ingress"                                # Tipo de regla de seguridad (entrada)
+#   from_port                = 0                                        # Puerto de inicio (puedes ajustarlo según tus necesidades)
+#   to_port                  = 0                                        # Puerto de destino (puedes ajustarlo según tus necesidades)
+#   protocol                 = "-1"                                     # Protocolo (-1 significa todos los protocolos)
+#   source_security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad de origen
+# }
+
+# # Regla de Ingreso HTTP para el Grupo de Seguridad
+# resource "aws_security_group_rule" "allow_ingress_http1" {
+#   security_group_id = aws_security_group.default.id # ID del grupo de seguridad
+#   type              = "ingress"                     # Tipo de regla de seguridad (entrada)
+#   from_port         = 80                            # Puerto de inicio (HTTP)
+#   to_port           = 80                            # Puerto de destino (HTTP)
+#   protocol          = "tcp"                         # Protocolo (TCP)
+#   cidr_blocks       = ["0.0.0.0/0"]                 # Rango de IP permitido (puedes ajustarlo según tus necesidades)
+# }

@@ -28,6 +28,7 @@ jobs:
         run: cd terraform/
       
       - name: terraform init
+        working-directory: ./terraform
         id: init
         run: |
               terraform init \
@@ -38,10 +39,13 @@ jobs:
                 -backend-config="encrypt=true"
 
       - name: Terraform Validate
+        working-directory: ./terraform
         run: terraform validate
 
       - name: Terraform Plan
+        working-directory: ./terraform
         run: terraform plan
 
       - name: Terraform Apply
+        working-directory: ./terraform
         run: terraform apply -auto-approve

@@ -15,7 +15,12 @@ variable "access_key" {
   default     = "AAKIA6CY4IDLE76WREF6P"
 }
 
+# Definición variables
 
+variable "buckets_s3" {
+  description = "buckets S3" 
+  type = string  
+}
 
 variable "secret_key" {
   description = "secret_key"

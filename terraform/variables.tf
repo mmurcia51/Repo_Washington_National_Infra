@@ -12,7 +12,7 @@ variable "access_key" {
   description = "access_key"
   type        = string
   sensitive   = true
-  default     = "AAKIA6CY4IDLE76WREF6P"
+  default     = "AKIA6CY4IDLETEVNMFW4"
 }
 
 # Definición variables
@@ -26,5 +26,5 @@ variable "secret_key" {
   description = "secret_key"
   type        = string
   sensitive   = true
-  default     = "dNix2r+ep62KzsWBzFyXWlVgIjtdMqm3KzQlPmND"
+  default     = "tPIkyqbuSpak88k2Gq6eVg0pLcOjqMuPH8e33fvH"
 }

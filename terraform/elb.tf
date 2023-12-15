@@ -1,10 +1,10 @@
 # Creación de un Application Load Balancer (ALB)
 resource "aws_alb" "washington_alb" {
-  name               = "washington-alb"                               # Nombre del ALB
-  internal           = false                                          # No es interno
-  load_balancer_type = "network"                                      # Tipo de balanceador de carga de aplicación
-  subnets            = [aws_subnet.subnet1.id, aws_subnet.subnet2.id] # Subnets en las que se desplegará el ALB
-
+  name                       = "washington-alb"                               # Nombre del ALB
+  internal                   = false                                          # No es interno
+  load_balancer_type         = "network"                                      # Tipo de balanceador de carga de aplicación
+  subnets                    = [aws_subnet.subnet1.id, aws_subnet.subnet2.id] # Subnets en las que se desplegará el ALB
+  security_groups            = [aws_security_group.nat_security_group.id]
   enable_deletion_protection = false # No habilitar la protección contra eliminación
 
   tags = {
@@ -55,7 +55,19 @@ resource "aws_alb_listener" "washington_listener" {
 resource "aws_security_group" "nat_security_group" {
   vpc_id = aws_vpc.washington_vpc.id   # ID de la VPC
   name   = "washington-security-group" # Nombre del grupo de seguridad
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   tags = {
     Enviroment = "Produccion" # Etiqueta para identificar el entorno
   }
@@ -81,15 +93,15 @@ resource "aws_security_group_rule" "allow_ingress_subnet2" {
   cidr_blocks       = [aws_subnet.subnet2.cidr_block]          # Bloque CIDR de la Sub
 }
 
-# Regla de Ingreso HTTP para el Grupo de Seguridad
-resource "aws_security_group_rule" "allow_ingress_http" {
-  security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad
-  type              = "ingress"                                # Tipo de regla de seguridad (entrada)
-  from_port         = 80                                       # Puerto de inicio (HTTP)
-  to_port           = 80                                       # Puerto de destino (HTTP)
-  protocol          = "tcp"                                    # Protocolo (TCP)
-  cidr_blocks       = ["0.0.0.0/0"]                            # Rango de IP permitido (puedes ajustarlo según tus necesidades)
-}
+# # Regla de Ingreso HTTP para el Grupo de Seguridad
+# resource "aws_security_group_rule" "allow_ingress_http" {
+#   security_group_id = aws_security_group.nat_security_group.id # ID del grupo de seguridad
+#   type              = "ingress"                                # Tipo de regla de seguridad (entrada)
+#   from_port         = 80                                       # Puerto de inicio (HTTP)
+#   to_port           = 80                                       # Puerto de destino (HTTP)
+#   protocol          = "tcp"                                    # Protocolo (TCP)
+#   cidr_blocks       = ["0.0.0.0/0"]                            # Rango de IP permitido (puedes ajustarlo según tus necesidades)
+# }
 
 # Regla de Ingreso para todo el tráfico desde otro Grupo de Seguridad
 resource "aws_security_group_rule" "allow_ingress_all_traffic" {

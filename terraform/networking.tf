@@ -36,37 +36,6 @@ resource "aws_subnet" "subnet2" {
   }
 }
 
-# Creación de la Tabla de Ruteo para la Subnet 1
-resource "aws_route_table" "route_table_subnet1" {
-  vpc_id = aws_vpc.washington_vpc.id
-
-  tags = {
-    Name       = "washington-route-table-subnet-1" # Etiqueta para identificar la tabla de ruteo
-    Enviroment = "Produccion"
-  }
-}
-
-# Asociación de la Tabla de Ruteo con la Subnet 1
-resource "aws_route_table_association" "association_subnet1" {
-  subnet_id      = aws_subnet.subnet1.id
-  route_table_id = aws_route_table.route_table_subnet1.id
-}
-
-# Creación de la Tabla de Ruteo para la Subnet 2
-resource "aws_route_table" "route_table_subnet2" {
-  vpc_id = aws_vpc.washington_vpc.id
-
-  tags = {
-    Name       = "washington-route-table-subnet-2" # Etiqueta para identificar la tabla de ruteo
-    Enviroment = "Produccion"
-  }
-}
-
-# Asociación de la Tabla de Ruteo con la Subnet 2
-resource "aws_route_table_association" "association_subnet2" {
-  subnet_id      = aws_subnet.subnet2.id
-  route_table_id = aws_route_table.route_table_subnet2.id
-}
 
 # Crear Internet Gateway
 resource "aws_internet_gateway" "washington_igw" {
@@ -78,16 +47,60 @@ resource "aws_internet_gateway" "washington_igw" {
 }
 
 
+# Creación de la Tabla de Ruteo para la Subnet 1
+resource "aws_route_table" "route_table_subnet" {
+  vpc_id = aws_vpc.washington_vpc.id
+
+  tags = {
+    Name       = "washington-route-table-subnet-1" # Etiqueta para identificar la tabla de ruteo
+    Enviroment = "Produccion"
+  }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.washington_igw.id
+  }
+}
+
+# Asociación de la Tabla de Ruteo con la Subnet
+resource "aws_main_route_table_association" "association_subnet" {
+  vpc_id         = aws_vpc.washington_vpc.id
+  route_table_id = aws_route_table.route_table_subnet.id
+}
+
+
+# # Creación de la Tabla de Ruteo para la Subnet 2
+# resource "aws_route_table" "route_table" {
+#   vpc_id = aws_vpc.washington_vpc.id
+
+#   tags = {
+#     Name       = "washington-route-table-subnet-2" # Etiqueta para identificar la tabla de ruteo
+#     Enviroment = "Produccion"
+#   }
+#   route {
+#     cidr_block = "0.0.0.0/0"
+#     gateway_id = aws_internet_gateway.washington_igw.id
+
+#   }
+# }
+
+# # Asociación de la Tabla de Ruteo con la Subnet 2
+# resource "aws_route_table_association" "association_subnet2" {
+#   subnet_id      = aws_subnet.subnet2.id
+#   route_table_id = aws_route_table.route_table_subnet2.id
+# }
+
+
+
 # Agregar regla para apuntar al Internet Gateway
 resource "aws_route" "ruta_al_igw1" {
-  route_table_id         = aws_route_table.route_table_subnet1.id
+  route_table_id         = aws_route_table.route_table_subnet.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.washington_igw.id
 }
 
-# Agregar regla para apuntar al Internet Gateway
-resource "aws_route" "ruta_al_igw2" {
-  route_table_id         = aws_route_table.route_table_subnet2.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.washington_igw.id
-}
+# # Agregar regla para apuntar al Internet Gateway
+# resource "aws_route" "ruta_al_igw2" {
+#   route_table_id         = aws_route_table.route_table_subnet2.id
+#   destination_cidr_block = "0.0.0.0/0"
+#   gateway_id             = aws_internet_gateway.washington_igw.id
+# }

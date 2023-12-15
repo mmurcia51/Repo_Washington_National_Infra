@@ -57,10 +57,11 @@ resource "aws_ecs_task_definition" "washington_tsk" {
 
 # Creacion Servicio
 resource "aws_ecs_service" "washington_ecs_srv" {
-  name            = "washington-ecs-srv"
+  name            = "washington_family"
   cluster         = aws_ecs_cluster.washington_ecs.id
-  task_definition = aws_ecs_task_definition.washington_tsk.id
+  task_definition = aws_ecs_task_definition.washington_tsk.arn
   desired_count   = 1
+  launch_type     = "FARGATE"
   network_configuration {
 
     subnets          = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]

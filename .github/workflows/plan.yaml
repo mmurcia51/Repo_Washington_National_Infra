@@ -23,23 +23,30 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
+      
+      - name: Change to Terraform directory
+        run: cd terraform
 
       - name: terraform init
+        working-directory: ./terraform
         id: init
         run: |
             terraform init \
               -input=false \
-              -backend-config="bucket=terraformwashintong" \
+              -backend-config="bucket=bck-washington" \
               -backend-config="key=washinthong.tfstate" \
               -backend-config="region=us-east-1" \
               -backend-config="encrypt=true"
       - name: terraform fmt
+        working-directory: ./terraform
         id: fmt
         run: terraform fmt
       - name: terraform validate
+        working-directory: ./terraform
         id: validate
         run: terraform validate
       - name: terraform plan
+        working-directory: ./terraform
         id: plan
         run: terraform plan
 

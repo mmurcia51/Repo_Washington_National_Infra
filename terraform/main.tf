@@ -1,5 +1,5 @@
 
-
+/*
 resource "aws_s3_bucket" "b" {
   bucket = "washintong-prueba"
   #acl    = "public-read"
@@ -32,7 +32,7 @@ resource "aws_s3_bucket_policy" "b_policy" {
 }
 POLICY
 }
-
+*/
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "OAI for S3 bucket"

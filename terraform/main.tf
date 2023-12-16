@@ -2,6 +2,7 @@
 
 resource "aws_s3_bucket" "b" {
   bucket = "washintong-prueba"
+  region= "us-west-2"
   #acl    = "public-read"
 }
 

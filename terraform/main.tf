@@ -43,7 +43,7 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = "bck-washington"
+    domain_name = "bck-washington2"
     origin_id   = "S3Origin"
 
     s3_origin_config {

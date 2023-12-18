@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "AWS Region"
-  default     = "us-east-1"
+  default     = "us-west-2"
 }
 /*
 resource "aws_s3_bucket" "b" {

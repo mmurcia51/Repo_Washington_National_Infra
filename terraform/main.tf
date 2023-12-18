@@ -1,4 +1,7 @@
-
+provider "aws" {
+  region     = "us-east-1"
+  alias      = "virginia"
+}
 /*
 resource "aws_s3_bucket" "b" {
   bucket = "washintong-prueba"

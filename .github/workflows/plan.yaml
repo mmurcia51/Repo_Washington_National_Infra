@@ -35,7 +35,7 @@ jobs:
               -input=false \
               -backend-config="bucket=bck-washington" \
               -backend-config="key=washinthong.tfstate" \
-              -backend-config="region=us-east-1" \
+              -backend-config="region=us-west-2" \
               -backend-config="encrypt=true"
       - name: terraform fmt
         working-directory: ./terraform

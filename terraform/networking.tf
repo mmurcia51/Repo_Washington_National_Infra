@@ -1,5 +1,5 @@
 provider "aws" {
-  region     = "us-east-1"
+  region     = "us-west-2"
   alias      = "virginia"
 }
 # Creación de la VPC
@@ -18,7 +18,7 @@ resource "aws_vpc" "washington_vpc" {
 resource "aws_subnet" "subnet1" {
   vpc_id                  = aws_vpc.washington_vpc.id
   cidr_block              = "10.0.1.0/24" # Rango de direcciones IP para la Subnet 1
-  availability_zone       = "us-east-1a"  # Zona de disponibilidad de AWS
+  availability_zone       = "us-west-2a"  # Zona de disponibilidad de AWS
   map_public_ip_on_launch = true          # Asignar IP pública a instancias lanzadas en la Subnet
 
   tags = {
@@ -31,7 +31,7 @@ resource "aws_subnet" "subnet1" {
 resource "aws_subnet" "subnet2" {
   vpc_id                  = aws_vpc.washington_vpc.id
   cidr_block              = "10.0.2.0/24" # Rango de direcciones IP para la Subnet 2
-  availability_zone       = "us-east-1b"  # Zona de disponibilidad de AWS
+  availability_zone       = "us-west-2b"  # Zona de disponibilidad de AWS
   map_public_ip_on_launch = true          # Asignar IP pública a instancias lanzadas en la Subnet
 
   tags = {

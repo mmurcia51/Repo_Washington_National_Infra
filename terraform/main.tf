@@ -41,10 +41,14 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "OAI for S3 bucket"
 }
 
+data "aws_s3_bucket" "bck-washington2" {
+  bucket = "bck-washington2"
+}
+
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = "bck-washington2.s3.amazonws.com"
-    origin_id   = "S3Origin"
+    domain_name = data.aws_s3_bucket.bck-washington2.bucket_domain_name
+    origin_id   = data.aws_s3_bucket.bck-washington2.id
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
@@ -59,7 +63,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3Origin"
+    target_origin_id =  data.aws_s3_bucket.bck-washington2.id
 
     forwarded_values {
       query_string = false
@@ -69,13 +73,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
   }
-
-  price_class = "PriceClass_100"
 
   restrictions {
     geo_restriction {

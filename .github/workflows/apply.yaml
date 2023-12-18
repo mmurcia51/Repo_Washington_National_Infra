@@ -48,4 +48,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./terraform
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan  || (echo "Error during apply, executing terraform destroy" && terraform destroy -auto-approve && exit 1)

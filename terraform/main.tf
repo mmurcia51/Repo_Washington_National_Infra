@@ -41,10 +41,14 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "OAI for S3 bucket"
 }
 
+data "aws_s3_bucket" "bck-washington2" {
+  bucket = "bck-washington2"
+}
+
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = aws_s3_bucket.bck-washington2.bucket_regional_domain_name
-    origin_id   = aws_s3_bucket.bck-washington2.id
+    domain_name = data.aws_s3_bucket.bck-washington2.bucket_domain_name
+    origin_id   = data.aws_s3_bucket.bck-washington2.id
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
@@ -59,7 +63,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id =  aws_s3_bucket.bck-washington2.id
+    target_origin_id =  data.aws_s3_bucket.bck-washington2.id
 
     forwarded_values {
       query_string = false

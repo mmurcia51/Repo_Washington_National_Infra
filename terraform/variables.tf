@@ -1,7 +1,3 @@
-variable "aws_region" {
-  description = "AWS Region"
-  default     = "us-east-1"
-}
 
 variable "ecs_execution_role_name" {
   description = "Name of the ECS Execution Role"

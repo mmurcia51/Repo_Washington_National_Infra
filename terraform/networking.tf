@@ -2,7 +2,7 @@ provider "aws" {
  # region     = "us-east-1"
   region     = "us-west-2"
   alias      = "virginia"
-
+}
 # Creación de la VPC
 resource "aws_vpc" "washington_vpc" {
   cidr_block           = "10.0.0.0/22" # Rango de direcciones IP para la VPC
